@@ -32,11 +32,13 @@ str(data)
 
 
 p <- ggplot(data = data, aes(x = DD, y = kc)) +
- geom_smooth(aes(group=Temporada, color=Temporada, fill=Temporada),method="loess",se=T) +
+ geom_smooth(aes(group=Temporada, color=Temporada, fill=Temporada),
+             formula=y ~ poly(x, 3),
+             method="lm",se=T) +
     
   geom_point(aes(color=Temporada)) +
  
   
-  theme(legend.title=element_blank())+
-facet_wrap(~Temporada)
+  theme(legend.title=element_blank())
+#facet_wrap(~Temporada)
 p
