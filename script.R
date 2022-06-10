@@ -1,4 +1,5 @@
 library(readr)
+library(readxl)
 library(tidyverse)
 library(lubridate)
 library(tsibble)
@@ -31,6 +32,9 @@ str(data)
 ########   plot ######
 
 
+
+data <- read_excel("datosok.xlsx")
+
 p <- ggplot(data = data, aes(x = DD, y = kc)) +
  geom_smooth(aes(group=Temporada, color=Temporada, fill=Temporada),
              formula=y ~ poly(x, 3),
@@ -39,6 +43,6 @@ p <- ggplot(data = data, aes(x = DD, y = kc)) +
   geom_point(aes(color=Temporada)) +
  
   
-  theme(legend.title=element_blank())
-#facet_wrap(~Temporada)
+  theme(legend.title=element_blank())+
+facet_wrap(~Temporada)
 p
