@@ -3,45 +3,32 @@ library(readxl)
 library(tidyverse)
 library(lubridate)
 library(tsibble)
-
-data <- read_delim("Estado de cultivo1.csv", 
-                 delim = ";", escape_double = FALSE, trim_ws = TRUE) 
-
-data$Fecha<- as_date(dmy(data$Fecha),tz = NULL, format = NULL)
-
-data<-data %>% 
-  mutate(DayMonth = format(as_date(Fecha), "%d-%m")) 
-
-#### hasta aca works #####
+library(ggpmisc)
 
 
-data %>% as.Date(paste0(as.character(day(Date)), '-',as.character(month(Date))), format='%d-%m')
-
-data$DayMonth <- format(as.Date(data$DayMonth), "%d-%m")
-
-
-data<-data %>%
-  mutate(DayMonth = format(as.Date(Fecha), "%d-%m"))
-
-data$date <- as.Date(data$Fecha, format = '%m/%d')
-str(data)
-data<-mutate(data, b2= as.Date(Fecha,  format = '%m/%d'))
-str(data)
 
 
 ########   plot ######
 
 
 
-data <- read_excel("datosok.xlsx")
+data <-  read_excel("datosok 20220611.xlsx")
 
-p <- ggplot(data = data, aes(x = DD, y = kc)) +
+  p <- ggplot(data = data, aes(x = DD, y = kc)) +
  geom_smooth(aes(group=Temporada, color=Temporada, fill=Temporada),
-             formula=y ~ poly(x, 3),
-             method="lm",se=T) +
+             formula=y ~ poly(x, 2),
+             method="lm",se=T) + 
+    stat_poly_eq(formula = y ~ poly(x, 2), 
+                 label.y = "bottom", label.x = "right",
+                 aes(label = paste(..eq.label..,
+                                   ..rr.label.., 
+                                   ..p.value.label..,
+                                   
+                                   sep = "~~~")), 
+                 parse = TRUE, size=2) +    
     
   geom_point(aes(color=Temporada)) +
- 
+
   
   theme(legend.title=element_blank())+
 facet_wrap(~Temporada)
